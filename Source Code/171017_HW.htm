@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title> 제목 : 10/17 과제 </title>
+</head>
+
+<body>
+<script>
+
+//Newton Method
+
+  document.write("1) Newton Method 알아보기", "<p>")
+  document.write("ㅣf(xn)ㅣ< e 일 때 : ")
+
+  function f(x) {
+    var y=3*x*x*x-2*x-3
+    return y
+  }
+
+  function f2(x) {
+    var y=9*x*x-2
+    return y
+  }
+
+  function newton(a) {
+    var a
+    var e=0.0001
+
+    while(Math.abs(f(a))>e) {
+      a=a-(f(a)/f2(a))
+    }
+    return a
+  }
+  document.write(newton(3), "<p>")
+
+//Bisection Method
+
+  document.write("2) Bisection Method 알아보기", "<p>")
+  document.write("ㅣf(xn)ㅣ< e 일 때 : ")
+
+  function bisection(a, b) {
+    var a, b
+    var e=0.0001
+
+    while(Math.abs(f(a)-f(b))>e) {
+      if(f((a+b)/2)*f(b)>0) {
+        b=(a+b)/2
+      } else {
+        a=(a+b)/2
+      }
+    }
+    return (a+b)/2
+  }
+  document.write(bisection(0, 3))
+
+</script>
+</body>
+</html>

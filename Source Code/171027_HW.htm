@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title> 제목 : 10/27 과제 </title>
+</head>
+
+<body>
+<script>
+
+//평균 구하기
+
+  function mean(array) {
+    var sum=0
+    var ans
+    for(i=0; i<array.length; i++) {
+      sum+=array[i]
+    }
+    ans=sum/array.length
+    return ans 
+  } 
+
+//분산 구하기
+
+  function dev(array) {
+    var m=mean(array)
+    var vsum=0
+    var ans
+    for(i=0; i<array.length; i++) {
+      vsum+=(array[i]-m)*(array[i]-m)
+    }
+    ans=vsum/array.length
+    return ans
+  }
+
+//표준편차 구하기
+
+  function sd(array) {
+    return Math.sqrt(dev(array))
+  }
+
+//최소값 구하기
+
+  function min(array) {
+    var ans=array[0]
+    for(i=1; array[i]!=null; i++) {
+      if(array[i]<ans) {
+        ans=array[i]
+      }
+    }
+    return ans
+  }
+
+//최대값 구하기
+
+  function max(array) {
+    var ans=array[0]
+    for(i=1; array[i]!=null; i++) {
+      if(array[i]>ans) {
+        ans=array[i]
+      }
+    }
+    return ans
+  }
+
+//sort 함수 만들기
+//sort(a=들어오는 배열, b=나가는 배열) > 기존 배열 변형 방지
+
+  function sort(array) {
+    var ans=new Array()
+    var temp_value = 0
+
+    for(i=0; i<array.length-1; i++) {
+      for(j=i+1; j<array.length; j++) {
+        if (array[i]>array[j]) {
+          temp_value=array[i]
+          array[i]=array[j]
+          array[j]=temp_value
+        }
+      }
+    ans.push(array[i])
+    }
+    ans.push(temp_value)
+    return ans
+  }
+
+//중간값 구하기
+
+  function med(array) {
+    var ans=array[0]
+    var n=array.length
+    if(n%2==1) {
+      ans=array[(n+1)/2-1]
+    } else {
+      ans=(array[n/2-1]+array[(n+2)/2-1])/2
+    }
+  return ans
+  }
+
+//1사분위수 구하기
+
+  function q1(array) {
+    var ans
+    var n=array.length
+    for(i=1; i<=n; i++) {
+      if(i/n>=0.25) {
+      ans=array[i-1]
+      break
+      }
+    }
+    return ans
+  }
+
+//3사분위수 구하기
+
+  function q3(array) {
+    var ans
+    var n=array.length
+    for(i=1; i<=n; i++) {
+      if(i/n>=0.75) {
+      ans=array[i-1]
+      break
+      }
+    }
+    return ans
+  }
+
+//기초통계량 출력함수 만들기
+
+  function static(array) {
+    ans=new Array()
+
+    ans.push(mean(array))
+    ans.push(sd(array).toFixed(2))
+    ans.push(min(array))
+    ans.push(max(array))
+
+    sort_array=sort(array)
+    ans.push(med(sort_array))
+    ans.push(q1(sort_array))
+    ans.push(q3(sort_array))
+    return ans
+  }
+
+//공분산 구하기
+
+  function cov(array1, array2) {
+    var bar1=mean(array1)
+    var bar2=mean(array2)
+    var n=array1.length
+    var sum=0
+    for(i=1; i<=n; i++) {
+      sum+=(array1[i-1]-bar1)*(array2[i-1]-bar2)
+    }
+    var ans=sum/n
+    return ans
+  }
+
+//상관계수 구하기
+
+  function r(array1, array2) {
+    var sxy=cov(array1, array2)
+    var sxx=sd(array1)
+    var syy=sd(array2)
+
+    var ans=sxy/(sxx*syy)
+    return ans.toFixed(2)
+  }
+
+//estimate_b 구하기
+
+  function bhat(array1, array2) {
+    var sxy=cov(array1, array2)
+    var sxx=dev(array1)
+
+    var ans=sxy/sxx
+    return ans.toFixed(1)
+  }
+
+//estimate_a 구하기
+
+  function ahat(array1, array2) {
+    var bar1=mean(array1)
+    var bar2=mean(array2)
+    var b=bhat(array1, array2)
+
+    var ans=bar2-(b*bar1)
+    return ans.toFixed(1)
+  }
+
+  document.write("<h1>", "< 기초통계량 구하기 >", "</h1>", "<p>")
+
+  x=new Array(3,1,5,9,7)
+  document.write("<h2>", "x = { ", x, " } <br>")
+  xx=sort(x)
+  document.write("sort(x) = { ", xx, " } <br>")
+  document.write("[ xbar, s², min, max, med, Q1, Q3 ] = [ ", static(xx), " ] <p>")
+
+  y=new Array(2,5,4,6,7,1,3)
+  document.write("y = { ", y, " } <br>")
+  yy=sort(y)
+  document.write("sort(y) = { ", yy, " } <br>")
+  document.write("[ ybar, s², min, max, med, Q1, Q3 ] = [ ", static(yy), " ] <p>")
+
+, document.write("----------------------------------------------------------------------", "<br>")
+
+  z=new Array(2,4,6,8,9)
+  document.write("z = { ", z, " } <p>")
+
+  document.write("cov(x, z) = ", cov(x, z), "<br>")
+  document.write("r = ", r(x, z), "<p>")
+
+  document.write("→ z = a+bx라 가정", "<br>")
+  document.write("estimate_b = ", bhat(x, z), "<br>")
+  document.write("estimate_a = ", ahat(x, z), "<p>")
+  document.write("→ z = ", ahat(x, z), "+", bhat(x, z), "x")
+
+</script>
+</body>
+</html>

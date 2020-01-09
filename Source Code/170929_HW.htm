@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<script>
+
+//sin(x)와 테일러급수 사이의 오차 계산하기
+
+  document.write("<H1>", "[ sin(x)와 테일러급수 사이의 오차 계산하기 ]")    
+
+  var x=1
+  document.write("<H2>", "<br>", "x = ", x, "이라 가정하고,")
+
+  var fx=Math.sin(x)
+  document.write("<H2>", "f(x) = sin(x)")
+  document.write("<H2>", "&nbsp", "&nbsp", "&nbsp", " = ", fx)
+  document.write("<H2>", "g(x) = x - x^3 / 3! + x^5 / 5! -...+ xⁿ/n!")
+  document.write("<H2>", "<br>", "Q. 오차가 0.00001미만이 되는 차시")
+
+  var sum=0
+  var num=1
+  var den=1
+  var sign=1
+
+  for(i=1; i<10; i++) {
+    sum=sum+(sign*num/den)
+    num=num*x*x
+    den=den*(2*i+1)*(2*i)
+    sign=sign*(-1)
+
+    if(Math.abs(fx-sum)<0.00001) {
+      document.write("<H2>", "&nbsp", "→ 정답 : ", i, "차시")
+      break
+    }
+  }
+
+  document.write("<h2>", "----------------------------------------------------------")
+  document.write("<h2>", "< 프롬프트로 직접 알아보기 >")
+
+//프롬프트 실행
+
+  var number
+  number = prompt("차시 n를 입력해보세요!", "")
+  document.write("<h3>", "입력한 차시는 [ ", number, " ]차시입니다.")
+  document.write("<h3>", "<br>", number, "차시의 테일러급수")
+
+  var sum=0
+  var num=1
+  var den=1
+  var sign=1
+
+  for(i=1; i<number; i++) {
+    sum=sum+(sign*num/den)
+    num=num*x*x
+    den=den*(2*i+1)*(2*i)
+    sign=sign*(-1)
+  }
+
+  document.write("<h3>", "g(x) = ", sum)
+  document.write("<h3>", "f(x)-g(x) = ", fx-sum, "&nbsp", "&nbsp", " → 오차")
+  
+</script>
+
+<body>
+</body>
+</html>

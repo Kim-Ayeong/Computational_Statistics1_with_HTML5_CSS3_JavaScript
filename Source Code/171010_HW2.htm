@@ -1,0 +1,118 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<script>
+
+//점수표 만들기
+
+  function score(name, sub1, sub2, sub3) {
+    this.input=new Array(name, sub1, sub2, sub3)
+    this.name=name
+    this.sub1=sub1
+    this.sub2=sub2
+    this.sub3=sub3
+    this.mean=parseInt((sub1+sub2+sub3)/3)
+  }
+
+//해당 과목점수 추출
+
+  function select(array, n) {
+    return array[n]
+  }
+
+//평균 계산
+
+  function mean(array) {
+    var sum=0
+    var ans
+    for(i=0; i<array.length; i++) {
+      sum+=array[i]
+    }
+    ans=sum/array.length
+    return ans 
+  } 
+
+//분산 계산
+
+  function dev(array) {
+    var m=mean(array)
+    var vsum=0
+    var ans
+    for(i=0; i<array.length; i++) {
+      vsum+=(array[i]-m)*(array[i]-m)
+    }
+    ans=vsum/array.length
+    return ans
+  }
+
+//표준편차 계산
+
+  function sd(array) {
+    return Math.sqrt(dev(array))
+  }
+
+</script>
+</head>
+
+<body>
+<script>
+
+//학생별 국어, 영어, 수학 점수
+
+  document.write("<h4>", "이름 국어 영어 수학 평균점수")
+
+  a=new score("A", 40, 60, 30)
+  document.write("<h2>", a.input, "&nbsp; &nbsp; &nbsp;", a.mean)
+
+  b=new score("B", 60, 90, 70)
+  document.write("<h2>", b.input, "&nbsp; &nbsp; &nbsp;", b.mean)
+
+  c=new score("C", 50, 70, 80)
+  document.write("<h2>", c.input, "&nbsp; &nbsp; &nbsp;", c.mean)
+
+  d=new score("D", 80, 90, 90)
+  document.write("<h2>", d.input, "&nbsp; &nbsp; &nbsp;", d.mean)
+
+  document.write("<h2>", "-----------------------------------------------") 
+  document.write("<h2>", "< 과목별 평균, 분산, 표준편차 >")
+
+  document.write("<h3>", "국어 : ")
+  sub1=new Array(select(a.input, 1), select(b.input, 1), select(c.input, 1), select(d.input, 1))
+  document.write("평균=", mean(sub1), " 표준편차=", sd(sub1))
+
+  document.write("<h3>", "영어 : ")
+  sub2=new Array(select(a.input, 2), select(b.input, 2), select(c.input, 2), select(d.input, 2))
+  document.write("평균=", mean(sub2), " 표준편차=", sd(sub2))
+    
+  document.write("<h3>", "수학 : ")
+  sub3=new Array(select(a.input, 3), select(b.input, 3), select(c.input, 3), select(d.input, 3))
+  document.write("평균=", mean(sub3), " 표준편차=", sd(sub3))
+
+  document.write("<h2>", "-----------------------------------------------") 
+
+  document.write("<h2>", "< 평균 내림차순으로 정렬하기 >") 
+
+  relocate=new Array(4)
+  relocate[0]=a.mean
+  relocate[1]=b.mean
+  relocate[2]=c.mean
+  relocate[3]=d.mean
+
+  var temp_value = 0
+
+  for(i=0; i<relocate.length-1; i++) {
+    for(j=i+1; j<relocate.length; j++) {
+      if (relocate[i]<relocate[j]) {
+        temp_value=relocate[i]
+        relocate[i]=relocate[j]
+        relocate[j]=temp_value
+      }
+    }
+  }
+
+  document.write("<h2>", "학생 : B D C A")
+  document.write("<h2>", "평균 : ", relocate)
+
+</script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+﻿<!doctype html>
+<html>
+<head>
+  <title> 11월 21일 실습 </title>
+<h1> < 정규분포 그리기 > </h1>
+
+<style>
+  svg { width:600px; height:600px; border:1px solid black; }
+
+  #Nomal rect {
+    stroke:black;
+    stroke-width : 2px;
+    fill:none;
+  }
+  #Nomal line {
+    stroke-width : 3px;
+  }
+  #Nomal text {
+    font-size : 15px;
+  }
+  .barname { font-size : 20px; }
+
+</style>
+
+<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+<script>
+  document.write("<h3>", "f(x) = 1/(2π)½ * exp(-x²/2)", "<p>")
+
+//정규분포 함수
+
+  function f(x) {
+    var y=Math.exp(-x*x/2)/Math.sqrt(2*Math.PI)
+    return y
+  }
+
+  var xmin = -4
+  var xmax = 4
+  var ymin = f(xmin)
+  var ymax = f(0)
+
+  document.write("x = -4, 4 일 때 : ", ymin.toFixed(6), "<br>")
+  document.write("x = 0 일 때 : ", ymax.toFixed(6), "<p>")
+
+</script>
+</head>
+
+<body>
+<svg id="Nomal">
+  <rect x="50" y="50" width="500" height="500" />
+</svg>
+
+<script>
+
+//라인 넣기
+
+  for(var i=0; i<800; i++) {
+    var gap=50
+    var line
+    d3.select("#Nomal")
+      .append("line") 
+      .attr("x1", 50 + 500*((-4+0.01*i)+4)/8)
+      .attr("y1", 550 - (500-gap)*(f(xmin + 0.01*i)-ymin)/(ymax-ymin))
+      .attr("x2", 50 + 500*((-4+0.01*(i+1))+4)/8)
+      .attr("y2", 550 - (500-gap)*(f(xmin + 0.01*(i+1))-ymin)/(ymax-ymin))
+      .style("stroke","red")
+  }
+
+//x, y축 넣기
+
+  var xScale = d3.scaleLinear().domain([-4,4]).range([0,500])
+  d3.select("#Nomal")
+    .append("g")
+    .attr("transform", "translate(50, 550)")
+    .call(d3.axisBottom(xScale))
+
+  var yScale = d3.scaleLinear().domain([0.5,0]).range([0,500])
+  d3.select("#Nomal")
+    .append("g")
+    .attr("transform", "translate(50, 50)")
+    .call(d3.axisLeft(yScale))
+
+</script>
+</body>
+</html>

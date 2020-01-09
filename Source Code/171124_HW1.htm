@@ -1,0 +1,83 @@
+﻿<!doctype html>
+<html>
+<head>
+  <title> 11월 24일 과제 </title>
+<h1> < 도수분포표 > </h1>
+
+<style>
+  svg { width:500px; height:250px; border:1px solid black; }
+  #BarGraph rect {
+    stroke : black;
+    stroke-width : 2px;
+    fill : yellow;
+    opacity : 0.7;
+  }
+  .barname { font-size : 20px; }
+  .axis text {font-size : 15px }
+  .axis path,
+  .axis line {
+    stroke-width : 1px;
+    stroke : black;
+  }
+  table { width:200px; height:300px; border:1px solid black; cellspacing:0px; text-align:center;  }
+  td { height:30px; align=center; valign=middle; border: 1px solid black; font-size: 20px;}
+</style>
+
+<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+<script>
+
+//데이터 입력
+
+  var data = [10,20,20,20,30,30,20,30]
+  var dataSet = data.sort()
+  document.write("<h2>", "dataSet = [", dataSet, "]", "<p>")
+
+//계급, 도수배열 생성
+
+  var n = dataSet.length
+  var temp = new Array()
+
+  for (var i=0; i<n; i++) {
+    var key = dataSet[i].toString()
+    if (!temp[key]) { temp[key] = 1 }
+    else { temp[key] += 1 }
+  }
+
+  var x = new Array()
+  var y = new Array()
+
+  for (var j in temp) {
+    x.push(j)
+    y.push(temp[j])
+    document.write(j, "의 개수 : ", temp[j], "<br>")
+  }
+  document.write("<p>", "→ 계급 = ", x, "<br>")
+  document.write("→ 도수 = ", y, "<p>")
+
+</script>
+</head>
+
+<body>
+<script type="text/javascript">
+
+//도수분포표 생성
+
+  var result = "<table>";
+
+  result += "<tr><td bgcolor='yellow'>계급</td>"
+  result += "<td>도수</td></tr>";
+
+  for(var i = 0; i <x.length; i++) {
+    result += "<tr><td bgcolor='yellow'>"
+    result += x[i]
+    result += "</td><td>"
+    result += y[i]
+    result += "</td></tr>";
+  }
+  result += "</table>";
+  
+  document.write( result );
+
+</script>
+</body>
+</html>

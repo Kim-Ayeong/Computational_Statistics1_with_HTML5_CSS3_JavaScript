@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<script>
+
+//exp(x)와 테일러급수 사이의 오차 계산하기
+
+  document.write("<H1>", "[ exp(x)와 테일러급수 사이의 오차 계산하기 ]")    
+
+  var x=1
+  document.write("<H2>", "<br>", "x = ", x, "이라 가정하고,")
+
+  var fx=Math.exp(x)
+  document.write("<H2>", "f(x) = exp(x)")
+  document.write("<H2>", "&nbsp", "&nbsp", "&nbsp", " = ", fx)
+  document.write("<H2>", "g(x) = 1 + x + x²/2! +...+ xⁿ/n!")
+  document.write("<H2>", "<br>", "Q. 오차가 0.00001미만이 되는 차시")
+
+  var n=1
+  var nfac=1
+  var gx=1
+
+  while(n<100) {
+    nfac=nfac*n
+    gx=gx+(Math.pow(x,n)/nfac)
+
+    if(fx-gx<0.00001) {
+      document.write("<H2>", "&nbsp", "→ 정답 : ", n, "차시")
+      break
+    }
+    n++
+  }
+
+  document.write("<h2>", "----------------------------------------------------------")
+  document.write("<h2>", "< 프롬프트로 직접 알아보기 >")
+
+//프롬프트 실행
+
+  var number
+  number = prompt("차시 n를 입력해보세요!", "")
+  document.write("<h3>", "입력한 차시는 [ ", number, " ]차시입니다.")
+  document.write("<h3>", "<br>", number, "차시의 테일러급수")
+
+  var n=1
+  var nfac=1
+  var gx=1
+
+  while(n<number) {
+    nfac=nfac*n
+    gx=gx+(Math.pow(x,n)/nfac)
+    n++
+  }
+
+  document.write("<h3>", "g(x) = ", gx)
+  document.write("<h3>", "f(x)-g(x) = ", fx-gx, "&nbsp", "&nbsp", " → 오차")
+
+</script>
+
+<body>
+</body>
+</html>
