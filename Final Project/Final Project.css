@@ -1,0 +1,72 @@
+﻿    svg { width:270px; height:250px; border:1px solid black; }
+    #Norm rect {
+      stroke:black;
+      stroke-width : 1px;
+      fill:none;
+    }
+    #Norm line {
+      stroke-width : 2px;
+    }
+    #Norm text {
+      font-size : 10px;
+    }
+    #Expo rect {
+      stroke:black;
+      stroke-width : 1px;
+      fill:none;
+    }
+    #Expo line {
+      stroke-width : 2px;
+    }
+    #Expo text {
+      font-size : 10px;
+    }
+    #Chis rect {
+      stroke:black;
+      stroke-width : 1px;
+      fill:none;
+    }
+    #Chis line {
+      stroke-width : 2px;
+    }
+    #Chis text {
+      font-size : 10px;
+    }
+    #Histo1 rect {
+      stroke : black;
+      stroke-width : 2px;
+      fill : yellow;
+      opacity : 0.7;
+    }
+    #Histo2 rect {
+      stroke : black;
+      stroke-width : 2px;
+      fill : yellow;
+      opacity : 0.7;
+    }
+    #Histo3 rect {
+      stroke : black;
+      stroke-width : 2px;
+      fill : yellow;
+      opacity : 0.7;
+    }
+    .bar {
+      stroke : black;
+      stroke-width : 1px;
+      fill : yellow;
+      opacity : 0.7;
+    }
+    .barname { font-size : 13px; }
+    table {
+      width:700px;
+      height:250px;
+      border:0px solid black;
+      cellspacing:0px;
+      text-align:center;
+    }
+    td {
+      align:left;
+      valign:middle;
+      border: 0px solid black;
+      font-size: 20px;
+    }

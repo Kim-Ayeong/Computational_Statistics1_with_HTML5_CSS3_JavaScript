@@ -1,0 +1,446 @@
+﻿<!doctype html>
+<html>
+<head>
+    <title> 프로젝트 </title>
+    <link rel="stylesheet" href="Final Project.css">
+    <script src="d3.v4.min.js"></script>
+    <script src="DistributionsUtil.js" ></script>
+    <script>
+//최소값 함수
+    function min(array) {
+        var ans = array[0]
+        for(var i=1; array[i]!=null; i++) {
+            if(array[i]<ans) { ans=array[i] }
+        }
+        return ans
+    }
+
+//최대값 함수
+    function max(array) {
+        var ans = array[0]
+        for(var i=1; array[i]!=null; i++) {
+            if(array[i]>ans) { ans=array[i] }
+        }
+        return ans
+    }
+
+//평균 함수
+    function mean(array) {
+        var sum = 0
+        for(i=0; i<array.length; i++) {
+            sum+=array[i]
+        }
+        var ans = sum/array.length
+        return ans 
+    } 
+
+//정규분포 함수
+    function f(x) {
+        var y = stdnormal_pdf(x)
+        return y
+    }
+    var N_xmin = -4
+    var N_xmax = 4                      //-4 < x < 4
+    var N_yarray = new Array()
+    for(var i=0; i<800; i++) {
+        N_yarray.push(f(0.01*i))
+    }
+    var N_ymin = min(N_yarray)          //=0.00
+    var N_ymax = max(N_yarray)          //=0.39
+
+//지수분포 함수
+    function g(x) {
+        var lamda = 2                   //β = 0.5     
+        var info = 0
+        var y = exponential_pdf(x, lamda, info)
+        return y
+    }
+    var E_xmin = 0
+    var E_xmax = 5                      //0 < x < 5
+    var E_yarray = new Array()
+    for(var i=0; i<500; i++) {
+        E_yarray.push(g(0.01*i))
+    }
+    var E_ymin = min(E_yarray)          //=0.04
+    var E_ymax = max(E_yarray)          //=0.5
+
+//카이제곱분포 함수
+    function h(x) {
+        var df = 3                      //자유도 = 3
+        var info = 0
+    	var y = chisq_pdf(x, df, info )
+    	return y
+    }
+    var C_xmin = 0
+    var C_xmax = 5                      //0 < x < 5
+    var C_yarray = new Array()
+    for(var i=0; i<500; i++) {
+        C_yarray.push(h(0.01*i))
+    }
+    var C_ymin = min(C_yarray)          //=0
+    var C_ymax = max(C_yarray)          //=0.24
+
+/* min, max 확인
+    document.write(N_ymin, "<br>", N_ymax, "<br>")
+    document.write(E_ymin, "<br>", E_ymax, "<br>")
+    document.write(C_ymin, "<br>", C_ymax, "<br>")
+*/
+
+//높이, 넓이 지정
+    var svgWidth = 250
+    var svgHeith = 250
+    var margin = {top:25, botton:25, left:25, right:25}
+    var Width = parseInt(250-margin.left-margin.right)          //=200
+    var Height = parseInt(250-margin.top-margin.botton)         //=200
+    </script>
+</head>
+
+<body background="project_bg.jpg">
+    <div align="center"><h1 style = "color :navy;"> 《 Central Limit Theorem 》 </h1><hr>
+    <h2> 1. 증명에 적용시킬 분포를 선택하세요. </h2>
+
+    <!--라디오버튼 삽입-->
+    <form name="selectForm">
+        <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name = "item1" value="1" checked> Normal(μ=0,σ=1)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name = "item1" value="2" > Exponential(λ=0.5)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name = "item1" value="3" > chi-square(k=3)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" value="완료" onclick=onClickButton()><br><br>
+    </form>
+
+    &nbsp;&nbsp;&nbsp;
+    <svg id="Norm">
+        <rect x="35" y="25" width="200" height="200" />
+    </svg>
+
+    <script>
+
+//정규분포 그래프
+    for(var i=0; i<800; i++) {
+        var gap = 45
+        var line
+        d3.select("#Norm")
+          .append("line")
+          .attr("x1", 35 + Width*((N_xmin+0.01*i)-N_xmin)/(N_xmax-N_xmin))
+          .attr("y1", (svgHeith-25)-(Height-gap)*(f(N_xmin + 0.01*i)-N_ymin)/(N_ymax-N_ymin))
+          .attr("x2", 35 + Width*((N_xmin+0.01*(i+1)-N_xmin)/(N_xmax-N_xmin)))
+          .attr("y2", (svgHeith-25)-(Height-gap)*(f(N_xmin + 0.01*(i+1)-N_ymin)/(N_ymax-N_ymin)))
+          .style("stroke","red")
+    }
+    var xScale = d3.scaleLinear().domain([-4,4]).range([0,200])
+                 d3.select("#Norm")
+                   .append("g")
+                   .attr("transform", "translate(35, 225)")
+                   .call(d3.axisBottom(xScale))
+
+    var yScale = d3.scaleLinear().domain([0.5,0]).range([0,200])
+                 d3.select("#Norm")
+                   .append("g")
+                   .attr("transform", "translate(35, 25)")
+                   .call(d3.axisLeft(yScale))
+    </script>
+
+    &nbsp;&nbsp;&nbsp;
+    <svg id="Expo">
+        <rect x="35" y="25" width="200" height="200" />
+    </svg>
+  
+    <script>
+
+//지수분포 그래프
+    for(var i=0; i<500; i++) {
+        var gap = 35
+        var line
+        d3.select("#Expo")
+          .append("line") 
+          .attr("x1", 35 + Width*((E_xmin+0.01*i)-E_xmin)/(E_xmax-E_xmin))
+          .attr("y1", (svgHeith-25)-(Height-gap)*(g(E_xmin + 0.01*i)-E_ymin)/(E_ymax-E_ymin))
+          .attr("x2", 35 + Width*((E_xmin+0.01*(i+1)-E_xmin)/(E_xmax-E_xmin)))
+          .attr("y2", (svgHeith-25)-(Height-gap)*(g(E_xmin + 0.01*(i+1))-E_ymin)/(E_ymax-E_ymin))
+          .style("stroke","blue")
+    }
+    var xScale = d3.scaleLinear().domain([0,5]).range([0,200])
+                 d3.select("#Expo")
+                   .append("g")
+                   .attr("transform", "translate(35, 225)")
+                   .call(d3.axisBottom(xScale))
+
+    var yScale = d3.scaleLinear().domain([0.6,0]).range([0,200])
+                 d3.select("#Expo")
+                   .append("g")
+                   .attr("transform", "translate(35, 25)")
+                   .call(d3.axisLeft(yScale))
+    </script>
+
+    &nbsp;&nbsp;&nbsp;
+    <svg id="Chis">
+        <rect x="35" y="25" width="200" height="200" />
+    </svg>
+  
+    <script>
+
+//카이제곱분포 그래프
+    for(var i=0; i<500; i++) {
+        var gap=80
+        var line
+        d3.select("#Chis")
+          .append("line") 
+          .attr("x1", 35 + Width*((C_xmin+0.01*i)-C_xmin)/(C_xmax-C_xmin))
+          .attr("y1", (svgHeith-25)-(Height-gap)*(h(C_xmin + 0.01*i)-C_ymin)/(C_ymax-C_ymin))
+          .attr("x2", 35 + Width*((C_xmin+0.01*(i+1)-C_xmin)/(C_xmax-C_xmin)))
+          .attr("y2", (svgHeith-25)-(Height-gap)*(h(C_xmin + 0.01*(i+1))-C_ymin)/(C_ymax-C_ymin))
+          .style("stroke","green")
+    }
+
+    var xScale = d3.scaleLinear().domain([0,5]).range([0,200])
+                 d3.select("#Chis")
+                   .append("g")
+                   .attr("transform", "translate(35, 225)")
+                   .call(d3.axisBottom(xScale))
+  
+    var yScale = d3.scaleLinear().domain([0.4,0]).range([0,200])
+                 d3.select("#Chis")
+                   .append("g")
+                   .attr("transform", "translate(35, 25)")
+                   .call(d3.axisLeft(yScale))
+    </script>
+
+    <script>
+
+//분포 선택
+    function onClickButton() {
+        d3.select("#Norm").style("background-color","transparent")
+        d3.select("#Expo").style("background-color","transparent")
+        d3.select("#Chis").style("background-color","transparent")
+
+        if(document.selectForm.item1[0].checked) {
+            alert("정규분포가 선택되었습니다.")
+            d3.select("#Norm")
+              .style("background-color","#ffffb3")
+        } else if(document.selectForm.item1[1].checked) {
+            alert("지수분포가 선택되었습니다.")
+            d3.select("#Expo")
+              .style("background-color","#ffffb3")
+        } else {
+            alert("카이제곱분포가 선택되었습니다.")
+            d3.select("#Chis")
+              .style("background-color","#ffffb3")
+        }
+    }
+    </script>
+
+    <h2><hr> 2. 각각의 샘플 사이즈를 입력하세요.</h2>
+
+    <!--텍스트 입력창 삽입-->
+    <form>
+        <h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ㆍn1 = <input type="text" class="textarea" value="5" size=4 id="init1">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ㆍn2 =  <input type="text" class="textarea" value="10" size=4 id="init2">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        ㆍn3 =  <input type="text" class="textarea" value="100" size=4 id="init3">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="button" value="완료" onClick=onClickButton2()><br></h3>
+    </form>
+
+    <!-- 히스토그램1 -->
+    &nbsp;&nbsp;&nbsp;
+    <svg id="Histo1">
+        <line x1="35" y1="225" x2="235" y2="225" style="stroke:black;" />
+        <text x="35" y="240" fill="black" font-size="14px">
+            &nbsp;&nbsp;
+            1 &nbsp;&nbsp; 2 &nbsp;&nbsp; 3 &nbsp;
+            [M] &nbsp; 5 &nbsp;&nbsp; 6 &nbsp;&nbsp; 7 </text>
+    </svg>
+
+    <!-- 히스토그램2 -->
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <svg id="Histo2">
+        <line x1="35" y1="225" x2="235" y2="225" style="stroke:black;" />
+        <text x="35" y="240" fill="black" font-size="14px">
+            &nbsp;&nbsp;
+            1 &nbsp;&nbsp; 2 &nbsp;&nbsp; 3 &nbsp;
+            [M] &nbsp; 5 &nbsp;&nbsp; 6 &nbsp;&nbsp; 7 </text>
+    </svg>
+
+    <!-- 히스토그램3 -->
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <svg id="Histo3">
+        <line x1="35" y1="225" x2="235" y2="225" style="stroke:black;" />
+        <text x="35" y="240" fill="black" font-size="14px">
+            &nbsp;&nbsp;
+            1 &nbsp;&nbsp; 2 &nbsp;&nbsp; 3 &nbsp;
+            [M] &nbsp; 5 &nbsp;&nbsp; 6 &nbsp;&nbsp; 7 </text>
+    </svg>
+    
+    <script>
+
+//size of n 표본의 표본평균 1000개 추출 함수
+    function datainput(n, x) {
+        var data = new Array()
+        for(var i=0; i<1000; i++) {
+            var sample = new Array()
+            for(var j=0; j<=n; j++) {                               //표본(size of n) 추출
+                sample.push(Math.random())
+            }
+            var samplemean = mean(sample)                           //표본평균 계산
+            if(x==1) {                                              //1 : 정규분포
+                var n_sample = stdnormal_inv(samplemean, 0) 
+                data.push(n_sample)
+            } else if(x==2) {                                       //2 : 지수분포
+                var e_sample = exponential_inv(samplemean, 2, 0)
+                data.push(e_sample)
+            } else {                                                //3 : 카이제곱분포
+                var c_sample = chisq_inv(samplemean, 3, 0)
+                data.push(c_sample)
+            }
+        }
+        return data 
+    }
+
+//히스토그램 배열 생성 함수
+    function histogram(array) {
+        var data = array
+        var dataSet = data.sort()
+        var n = dataSet.length        //=1000
+        var datamin = min(dataSet)
+        var datamax = max(dataSet)
+        var delta = (datamax-datamin)/14
+
+        var temp = new Array()
+        for (var i=0; i<n; i++) {
+            var key = dataSet[i].toString()
+            if (!temp[key]) { temp[key] = 1 }
+            else { temp[key] += 1 }
+        }
+        var x = new Array()         //계급 배열
+        var y = new Array()         //도수 배열
+        for (var j in temp) {
+            x.push(j)
+            y.push(temp[j])
+        }
+        var z = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0)          //구간별 도수 배열
+        for (var i=0; i<14; i++) {
+            var start = parseFloat(datamin) + i*parseFloat(delta)
+            var end = parseFloat(datamin) + (i+1)*parseFloat(delta)
+            for(var j=0; j<x.length; j++) {
+                if(x[j]>=start && x[j]<=end) {
+                    z[i] += parseInt(y[j])          //구간에 도수 더하기
+                }
+            }
+            //document.write("<br>", start, " <= x < ", end, "구간 : ", z[i], "<br>")
+        }
+        //document.write(n)
+        return z
+    }
+
+//히스토그램 출력 함수
+    function onClickButton2() {
+        d3.select("#Histo1").selectAll("rect").remove();
+        d3.select("#Histo1").selectAll("text.barname").remove();
+        d3.select("#Histo2").selectAll("rect").remove();
+        d3.select("#Histo2").selectAll("text.barname").remove();
+        d3.select("#Histo3").selectAll("rect").remove();
+        d3.select("#Histo3").selectAll("text.barname").remove();
+
+        var input1 = parseInt(document.getElementById("init1").value)
+        var input2 = parseInt(document.getElementById("init2").value)
+        var input3 = parseInt(document.getElementById("init3").value)
+      
+        if(document.selectForm.item1[0].checked) {
+            alert("정규분포 표본 1000개를 추출했습니다.")
+            var data1 = datainput(input1, 1)
+            var data2 = datainput(input2, 1)
+            var data3 = datainput(input3, 1)
+        } else if(document.selectForm.item1[1].checked) {
+            alert("지수분포 표본 1000개를 추출했습니다.")
+            var data1 = datainput(input1, 2)
+            var data2 = datainput(input2, 2)
+            var data3 = datainput(input3, 2)
+        } else {
+            alert("카이제곱분포 표본 1000개를 추출했습니다.")
+            var data1 = datainput(input1, 3)
+            var data2 = datainput(input2, 3)
+            var data3 = datainput(input3, 3)
+        }
+        var dhisto1 = histogram(data1)
+        var dhisto2 = histogram(data2)
+        var dhisto3 = histogram(data3)
+
+//svg에 히스토그램 그리기
+        var bar1 = d3.select("#Histo1")
+                     .selectAll("rect")
+                     .data(dhisto1)
+                 bar1.enter()
+                     .append("rect")
+                     .attr("width", 0)
+                     .attr("height", function(d,i){return (0.6)*d;})
+                     .attr("x", function(d,i){return 35 + i*14.25;})
+                     .attr("y", function(d,i){return 225-(0.6)*d;})
+                     .transition()
+                     .delay(function(d,i) {return i*200;})
+                     .duration(600)
+                     .attr("width", "14.25px")
+                 bar1.enter()
+                     .append("text")
+                     .attr("class", "barname")
+                     .data(dhisto1)
+                     .attr("x", function(d,i){return 20 + i*17;})
+                     .attr("y", 40)
+		     .style("font-size", "9px")
+                     .text(function(d,i){return d;})
+
+        var bar2 = d3.select("#Histo2")
+                     .selectAll("rect")
+                     .data(dhisto2)
+                 bar2.enter()
+                     .append("rect")
+                     .attr("width", 0)
+                     .attr("height", function(d,i){return (0.6)*d;})
+                     .attr("x", function(d,i){return 35 + i*14.25;})
+                     .attr("y", function(d,i){return 225-(0.6)*d;})
+                     .transition()
+                     .delay(function(d,i) {return i*200;})
+                     .duration(600)
+                     .attr("width", "14.25px")
+                 bar2.enter()
+                     .append("text")
+                     .attr("class", "barname")
+                     .data(dhisto2)
+                     .attr("x", function(d,i){return 20 + i*17;})
+                     .attr("y", 40)
+		     .style("font-size", "8px")
+                     .text(function(d,i){return d;})
+
+        var bar3 = d3.select("#Histo3")
+                     .selectAll("rect")
+                     .data(dhisto3)
+                 bar3.enter()
+                     .append("rect")
+                     .attr("width", 0)
+                     .attr("height", function(d,i){return (0.6)*d;})
+                     .attr("x", function(d,i){return 35 + i*14.25;})
+                     .attr("y", function(d,i){return 225-(0.6)*d;})
+                     .transition()
+                     .delay(function(d,i) {return i*200;})
+                     .duration(600)
+                     .attr("width", "14.25px")
+                 bar3.enter()
+                     .append("text")
+                     .attr("class", "barname")
+                     .data(dhisto3)
+                     .attr("x", function(d,i){return 20 + i*17;})
+                     .attr("y", 40)
+		     .style("font-size", "8px")
+                     .text(function(d,i){return d;})
+    }
+    
+    </script>
+    <h2> ☞ <span style="color:red">중심극한정리</span>에 의해 </h2>
+    <h2> n→∞일 때, <span style="color:blue">표본평균의 분포</span>는 정규분포에 점점 가까워지는 것을 볼 수 있다. <hr></h2>
+    </div>
+</body>
+</html>
