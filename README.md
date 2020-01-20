@@ -2,7 +2,7 @@
 **[ 전산통계1 ]**
 
 - 교육 일시 : 2017/09/01 - 2017/12/21
-- 언어 및 프로그램 : JavaScript / Atom
+- 언어 및 프로그램 : HTML5, CSS3, JavaScript / Atom
 - 주교재 : HTML5 open reference
   - <img src="https://image.slidesharecdn.com/html5openreference20111125-111128074313-phpapp01/95/html5-open-reference-20111125korean-1-728.jpg?cb=1322473973" alt="html5 open reference에 대한 이미지 검색결과" width="300" />
 
